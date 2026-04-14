@@ -1,80 +1,54 @@
-'use client';
+return (
+  <div className="bg-white p-6 rounded-2xl shadow mb-6">
+    <h2 className="text-xl font-semibold mb-4">
+      {editingItem ? 'Edit Item' : 'Add Item'}
+    </h2>
 
-import { useEffect, useState } from 'react';
-
-export default function ItemForm({ onSubmit, editingItem, onCancel }) {
-  const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
-  const [price, setPrice] = useState('');
-  const [file, setFile] = useState(null);
-
-  useEffect(() => {
-    if (editingItem) {
-      setTitle(editingItem.title || '');
-      setDescription(editingItem.description || '');
-      setPrice(editingItem.price || '');
-    } else {
-      resetForm();
-    }
-  }, [editingItem]);
-
-  function resetForm() {
-    setTitle('');
-    setDescription('');
-    setPrice('');
-    setFile(null);
-  }
-
-  function handleSubmit() {
-    onSubmit({
-      title,
-      description,
-      price,
-      file
-    });
-
-    if (!editingItem) resetForm();
-  }
-
-  return (
-    <div style={{ marginBottom: '30px' }}>
-      <h2>{editingItem ? 'Edit Item' : 'Add Item'}</h2>
-
+    <div className="grid gap-3">
       <input
+        className="border p-2 rounded"
         placeholder="Title"
         value={title}
         onChange={e => setTitle(e.target.value)}
       />
-      <br />
 
       <textarea
+        className="border p-2 rounded"
         placeholder="Description"
         value={description}
         onChange={e => setDescription(e.target.value)}
       />
-      <br />
 
       <input
+        className="border p-2 rounded"
         type="number"
         placeholder="Price"
         value={price}
         onChange={e => setPrice(e.target.value)}
       />
-      <br />
 
       <input
         type="file"
         onChange={e => setFile(e.target.files[0])}
       />
-      <br />
 
-      <button onClick={handleSubmit}>
-        {editingItem ? 'Update Item' : 'Add Item'}
-      </button>
+      <div className="flex gap-2">
+        <button
+          className="bg-blue-500 text-white px-4 py-2 rounded"
+          onClick={handleSubmit}
+        >
+          {editingItem ? 'Update' : 'Add'}
+        </button>
 
-      {editingItem && (
-        <button onClick={onCancel}>Cancel</button>
-      )}
+        {editingItem && (
+          <button
+            className="bg-gray-300 px-4 py-2 rounded"
+            onClick={onCancel}
+          >
+            Cancel
+          </button>
+        )}
+      </div>
     </div>
-  );
-}
+  </div>
+);
