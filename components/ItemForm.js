@@ -88,8 +88,9 @@ export default function ItemForm({ onSubmit, editingItem, onCancel }) {
           <button
             className="bg-blue-500 text-white px-4 py-2 rounded"
             onClick={handleSubmit}
+            disabled={loading}
           >
-            {editingItem ? 'Update' : 'Add'}
+            {loading ? 'Processing...' : (editingItem ? 'Update' : 'Add')}
           </button>
 
           {editingItem && (
@@ -116,13 +117,7 @@ export default function ItemForm({ onSubmit, editingItem, onCancel }) {
           </div>
         </div>
       )}
-      <button
-        className="bg-blue-500 text-white px-4 py-2 rounded"
-        onClick={handleSubmit}
-        disabled={loading}
-      >
-        {loading ? 'Processing...' : (editingItem ? 'Update' : 'Add')}
-      </button>
+      
     </div>
   );
 }
