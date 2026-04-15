@@ -20,7 +20,7 @@ export default function ItemList({ items, onEdit, onDelete, onMarkSold }) {
 
             <h3 className="font-semibold">{item.title}</h3>
             <p className="text-sm text-gray-600">{item.description}</p>
-            <p className="font-bold">¥{item.price}</p>
+            <p className="font-bold">${item.price?.toFixed(2)}</p>
             <p className="text-sm">Status: {item.status}</p>
 
             <div className="flex gap-2 mt-3">

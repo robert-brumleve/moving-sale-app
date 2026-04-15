@@ -60,7 +60,9 @@ export default function Dashboard() {
       {
         title: formData.title,
         description: formData.description,
-        price: formData.price ? Number(formData.price) : null,
+        price: formData.price
+          ? Number(parseFloat(formData.price).toFixed(2))
+          : null,
         image_url: imageUrl
       }
     ]);
@@ -80,8 +82,10 @@ export default function Dashboard() {
       .update({
         title: formData.title,
         description: formData.description,
-        price: formData.price ? Number(formData.price) : null
-      })
+        price: formData.price
+          ? Number(parseFloat(formData.price).toFixed(2))
+          : null,
+        })
       .eq('id', editingItem.id);
 
     setEditingItem(null);

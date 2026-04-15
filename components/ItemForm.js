@@ -29,6 +29,15 @@ export default function ItemForm({ onSubmit, editingItem, onCancel }) {
   }
 
   async function handleSubmit() {
+    // ✅ Validate USD format: numbers with max 2 decimal places
+    const validPrice = /^\d+(\.\d{1,2})?$/.test(price);
+
+    if (!validPrice) {
+      setModalMessage('Price must be in valid USD format (e.g. 12.34)');
+      setShowModal(true);
+      return;
+    }
+
     setLoading(true);
 
     const result = await onSubmit({
@@ -43,7 +52,7 @@ export default function ItemForm({ onSubmit, editingItem, onCancel }) {
     if (result?.success) {
       setModalMessage(result.message);
       setShowModal(true);
-      resetForm(); // ✅ only on success
+      resetForm();
     } else {
       setModalMessage(result?.message || 'Something went wrong');
       setShowModal(true);
@@ -73,8 +82,8 @@ export default function ItemForm({ onSubmit, editingItem, onCancel }) {
 
         <input
           className="border p-2 rounded"
-          type="number"
-          placeholder="Price"
+          type="text"
+          placeholder="Price (e.g. 12.34)"
           value={price}
           onChange={e => setPrice(e.target.value)}
         />
