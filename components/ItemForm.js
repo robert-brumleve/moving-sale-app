@@ -1,4 +1,7 @@
 'use client';
+const [showModal, setShowModal] = useState(false);
+const [modalMessage, setModalMessage] = useState('');
+const [loading, setLoading] = useState(false);
 
 import { useEffect, useState } from 'react';
 
@@ -25,13 +28,26 @@ export default function ItemForm({ onSubmit, editingItem, onCancel }) {
     setFile(null);
   }
 
-  function handleSubmit() {
-    onSubmit({
+  async function handleSubmit() {
+    setLoading(true);
+
+    const result = await onSubmit({
       title,
       description,
       price,
       file
     });
+
+    setLoading(false);
+
+    if (result?.success) {
+      setModalMessage(result.message);
+      setShowModal(true);
+      resetForm(); // ✅ only on success
+    } else {
+      setModalMessage(result?.message || 'Something went wrong');
+      setShowModal(true);
+    }
   }
 
   return (
@@ -86,6 +102,27 @@ export default function ItemForm({ onSubmit, editingItem, onCancel }) {
           )}
         </div>
       </div>
+      {showModal && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-40">
+          <div className="bg-white p-6 rounded-xl shadow-lg w-80 text-center">
+            <p className="mb-4">{modalMessage}</p>
+
+            <button
+              className="bg-blue-500 text-white px-4 py-2 rounded"
+              onClick={() => setShowModal(false)}
+            >
+              OK
+            </button>
+          </div>
+        </div>
+      )}
+      <button
+        className="bg-blue-500 text-white px-4 py-2 rounded"
+        onClick={handleSubmit}
+        disabled={loading}
+      >
+        {loading ? 'Processing...' : (editingItem ? 'Update' : 'Add')}
+      </button>
     </div>
   );
 }

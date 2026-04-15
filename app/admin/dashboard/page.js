@@ -46,8 +46,7 @@ export default function Dashboard() {
         .upload(`public/${fileName}`, formData.file);
 
       if (error) {
-        alert('Image upload failed');
-        return;
+        return { success: false, message: 'Image upload failed' };
       }
 
       const { data: urlData } = supabase.storage
@@ -57,7 +56,7 @@ export default function Dashboard() {
       imageUrl = urlData.publicUrl;
     }
 
-    await supabase.from('items').insert([
+    const { error } = await supabase.from('items').insert([
       {
         title: formData.title,
         description: formData.description,
@@ -66,7 +65,13 @@ export default function Dashboard() {
       }
     ]);
 
+    if (error) {
+      return { success: false, message: error.message };
+    }
+
     fetchItems();
+
+    return { success: true, message: 'Item added successfully!' };
   }
 
   async function updateItem(formData) {
