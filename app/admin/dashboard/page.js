@@ -60,9 +60,7 @@ export default function Dashboard() {
       {
         title: formData.title,
         description: formData.description,
-        price: formData.price
-          ? Number(parseFloat(formData.price).toFixed(2))
-          : null,
+        price: Number(parseFloat(formData.price).toFixed(2)),
         image_url: imageUrl
       }
     ]);
@@ -82,9 +80,7 @@ export default function Dashboard() {
       .update({
         title: formData.title,
         description: formData.description,
-        price: formData.price
-          ? Number(parseFloat(formData.price).toFixed(2))
-          : null,
+        price: Number(parseFloat(formData.price).toFixed(2))
         })
       .eq('id', editingItem.id);
 

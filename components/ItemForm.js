@@ -29,7 +29,14 @@ export default function ItemForm({ onSubmit, editingItem, onCancel }) {
   }
 
   async function handleSubmit() {
-    // ✅ Validate USD format: numbers with max 2 decimal places
+    //  Require price
+    if (!price || price.trim() === '') {
+      setModalMessage('Price is required.');
+      setShowModal(true);
+      return;
+    }
+
+    //  Validate USD format
     const validPrice = /^\d+(\.\d{1,2})?$/.test(price);
 
     if (!validPrice) {
