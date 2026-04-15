@@ -1,7 +1,4 @@
 'use client';
-const [showModal, setShowModal] = useState(false);
-const [modalMessage, setModalMessage] = useState('');
-const [loading, setLoading] = useState(false);
 
 import { useEffect, useState } from 'react';
 
@@ -10,6 +7,9 @@ export default function ItemForm({ onSubmit, editingItem, onCancel }) {
   const [description, setDescription] = useState('');
   const [price, setPrice] = useState('');
   const [file, setFile] = useState(null);
+  const [showModal, setShowModal] = useState(false);
+  const [modalMessage, setModalMessage] = useState('');
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (editingItem) {
