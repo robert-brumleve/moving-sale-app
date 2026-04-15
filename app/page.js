@@ -44,7 +44,7 @@ export default function Home() {
 
             <div className="flex justify-between items-center">
               <span className="text-lg font-bold">
-                ¥{item.price}
+                ${item.price?.toFixed(2)}
               </span>
 
               {item.status === 'sold' && (
