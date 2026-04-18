@@ -80,7 +80,7 @@ export default function Dashboard() {
       .update({
         title: formData.title,
         description: formData.description,
-        price: Number(parseFloat(formData.price).toFixed(2))
+        price: formData.price
         })
       .eq('id', editingItem.id);
 
@@ -104,8 +104,17 @@ export default function Dashboard() {
     fetchItems();
   }
 
+    async function markAvailable(id) {
+    await supabase
+      .from('items')
+      .update({ status: 'available' })
+      .eq('id', id);
+
+    fetchItems();
+  }
+
   return (
-    <div className="min-h-screen bg-gray-100 p-6">
+    <div className="min-h-screen bg-gray-100 p-6 text-gray-600">
       <h1 className="text-3xl font-bold mb-6">Admin Dashboard</h1>
 
       <ItemForm
@@ -119,6 +128,7 @@ export default function Dashboard() {
         onEdit={setEditingItem}
         onDelete={deleteItem}
         onMarkSold={markSold}
+        onMarkAvailable={markAvailable}
       />
     </div>
   );

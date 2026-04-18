@@ -1,6 +1,6 @@
 'use client';
 
-export default function ItemList({ items, onEdit, onDelete, onMarkSold }) {
+export default function ItemList({ items, onEdit, onDelete, onMarkSold, onMarkAvailable }) {
   return (
     <div>
       <h2 className="text-xl font-semibold mb-4">Items</h2>
@@ -18,14 +18,14 @@ export default function ItemList({ items, onEdit, onDelete, onMarkSold }) {
               />
             )}
 
-            <h3 className="font-semibold">{item.title}</h3>
+            <h3 className="font-semibold text-gray-600">{item.title}</h3>
             <p className="text-sm text-gray-600">{item.description}</p>
-            <p className="font-bold">${item.price?.toFixed(2)}</p>
-            <p className="text-sm">Status: {item.status}</p>
+            <p className="font-bold text-gray-600">{item.price}</p>
+            <p className="text-sm text-gray-600">Status: {item.status}</p>
 
             <div className="flex gap-2 mt-3">
               <button
-                className="bg-yellow-400 px-2 py-1 rounded"
+                className="bg-yellow-400 text-white px-2 py-1 rounded"
                 onClick={() => onEdit(item)}
               >
                 Edit
@@ -43,7 +43,16 @@ export default function ItemList({ items, onEdit, onDelete, onMarkSold }) {
                   className="bg-green-500 text-white px-2 py-1 rounded"
                   onClick={() => onMarkSold(item.id)}
                 >
-                  Sold
+                  Mark as Sold
+                </button>
+              )}
+
+              {item.status !== 'available' && (
+                <button
+                  className="bg-blue-500 text-white px-2 py-1 rounded"
+                  onClick={() => onMarkAvailable(item.id)}
+                >
+                  Mark as Available
                 </button>
               )}
             </div>

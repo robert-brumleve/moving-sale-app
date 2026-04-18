@@ -20,7 +20,7 @@ export default function Home() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-100 p-6">
+    <div className="min-h-screen bg-gray-100 p-6 text-gray-600">
       <h1 className="text-3xl font-bold mb-6">Items for Sale</h1>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
@@ -38,17 +38,17 @@ export default function Home() {
 
             <h2 className="text-xl font-semibold">{item.title}</h2>
 
-            <p className="text-gray-600 text-sm mb-2">
+            <p className="text-black-600 text-sm mb-2">
               {item.description}
             </p>
 
             <div className="flex justify-between items-center">
               <span className="text-lg font-bold">
-                ${item.price?.toFixed(2)}
+                {item.price}
               </span>
 
               {item.status === 'sold' && (
-                <span className="text-red-500 text-sm font-semibold">
+                <span className="text-red-500 text-lg font-semibold">
                   SOLD
                 </span>
               )}

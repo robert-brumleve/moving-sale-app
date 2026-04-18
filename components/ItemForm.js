@@ -36,15 +36,6 @@ export default function ItemForm({ onSubmit, editingItem, onCancel }) {
       return;
     }
 
-    //  Validate USD format
-    const validPrice = /^\d+(\.\d{1,2})?$/.test(price);
-
-    if (!validPrice) {
-      setModalMessage('Price must be in valid USD format (e.g. 12.34)');
-      setShowModal(true);
-      return;
-    }
-
     setLoading(true);
 
     const result = await onSubmit({
@@ -67,30 +58,29 @@ export default function ItemForm({ onSubmit, editingItem, onCancel }) {
   }
 
   return (
-    <div className="bg-white p-6 rounded-2xl shadow mb-6">
+    <div className="bg-white p-6 rounded-2xl shadow mb-6 text-gray-600">
       <h2 className="text-xl font-semibold mb-4">
         {editingItem ? 'Edit Item' : 'Add Item'}
       </h2>
 
       <div className="grid gap-3">
+        Title
         <input
           className="border p-2 rounded"
-          placeholder="Title"
           value={title}
           onChange={e => setTitle(e.target.value)}
         />
 
+        Description
         <textarea
           className="border p-2 rounded"
-          placeholder="Description"
           value={description}
           onChange={e => setDescription(e.target.value)}
         />
 
+        Price
         <input
           className="border p-2 rounded"
-          type="text"
-          placeholder="Price (e.g. 12.34)"
           value={price}
           onChange={e => setPrice(e.target.value)}
         />
