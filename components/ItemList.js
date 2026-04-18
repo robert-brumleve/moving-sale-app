@@ -29,7 +29,7 @@ export default function ItemList({ items, onEdit, onDelete, onMarkSold, onMarkAv
             {item.image_url && (
               <img
                 src={item.image_url}
-                className="w-full h-40 object-cover rounded mb-2 cursor-pointer"
+                className="w-full h-40 object-contain rounded mb-2 cursor-pointer"
                 onClick={() => setSelectedImage(item.image_url)}
               />
             )}
@@ -74,7 +74,7 @@ export default function ItemList({ items, onEdit, onDelete, onMarkSold, onMarkAv
               {selectedImage && (
                 <div className="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50">
                   <button
-                    className="absolute top-4 right-4 text-white text-2xl"
+                    className="absolute top-4 right-4 bg-black bg-opacity-70 text-white rounded-full w-12 h-12 flex items-center justify-center text-2xl shadow-lg hover:bg-opacity-90 transition"
                     onClick={() => setSelectedImage(null)}
                   >
                     ✕
