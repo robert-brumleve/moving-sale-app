@@ -1,6 +1,21 @@
 'use client';
 
+import { useEffect, useState } from 'react';
+
 export default function ItemList({ items, onEdit, onDelete, onMarkSold, onMarkAvailable }) {
+  const [selectedImage, setSelectedImage] = useState(null);
+
+  useEffect(() => {
+    function handleKey(e) {
+      if (e.key === 'Escape') {
+        setSelectedImage(null);
+      }
+    }
+
+    window.addEventListener('keydown', handleKey);
+    return () => window.removeEventListener('keydown', handleKey);
+  }, []);
+  
   return (
     <div>
       <h2 className="text-xl font-semibold mb-4">Items</h2>
@@ -14,7 +29,8 @@ export default function ItemList({ items, onEdit, onDelete, onMarkSold, onMarkAv
             {item.image_url && (
               <img
                 src={item.image_url}
-                className="w-full h-40 object-cover rounded mb-2"
+                className="w-full h-40 object-cover rounded mb-2 cursor-pointer"
+                onClick={() => setSelectedImage(item.image_url)}
               />
             )}
 
@@ -54,6 +70,21 @@ export default function ItemList({ items, onEdit, onDelete, onMarkSold, onMarkAv
                 >
                   Mark as Available
                 </button>
+              )}
+              {selectedImage && (
+                <div className="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50">
+                  <button
+                    className="absolute top-4 right-4 text-white text-2xl"
+                    onClick={() => setSelectedImage(null)}
+                  >
+                    ✕
+                  </button>
+
+                  <img
+                    src={selectedImage}
+                    className="max-w-full max-h-full rounded-lg shadow-lg"
+                  />
+                </div>
               )}
             </div>
           </div>

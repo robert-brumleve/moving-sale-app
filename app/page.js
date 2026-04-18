@@ -5,10 +5,22 @@ import { supabase } from '../lib/supabase';
 
 export default function Home() {
   const [items, setItems] = useState([]);
+  const [selectedImage, setSelectedImage] = useState(null);
 
   useEffect(() => {
     fetchItems();
   }, []);
+
+  useEffect(() => {
+  function handleKey(e) {
+    if (e.key === 'Escape') {
+      setSelectedImage(null);
+    }
+  }
+
+  window.addEventListener('keydown', handleKey);
+  return () => window.removeEventListener('keydown', handleKey);
+}, []);
 
   async function fetchItems() {
     const { data } = await supabase
@@ -32,7 +44,8 @@ export default function Home() {
             {item.image_url && (
               <img
                 src={item.image_url}
-                className="w-full h-48 object-cover rounded-xl mb-3"
+                className="w-full h-40 object-cover rounded mb-2 cursor-pointer"
+                onClick={() => setSelectedImage(item.image_url)}
               />
             )}
 
@@ -55,7 +68,22 @@ export default function Home() {
             </div>
           </div>
         ))}
+        {selectedImage && (
+          <div className="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50">
+            <button
+              className="absolute top-4 right-4 text-white text-2xl"
+              onClick={() => setSelectedImage(null)}
+            >
+              ✕
+            </button>
+
+            <img
+              src={selectedImage}
+              className="max-w-full max-h-full rounded-lg shadow-lg"
+            />
+          </div>
+        )}
       </div>
-    </div>
+    </div>    
   );
 }
