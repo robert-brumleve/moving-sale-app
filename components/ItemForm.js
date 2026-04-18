@@ -1,8 +1,25 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
+import imageCompression from 'browser-image-compression';
 
-export default function ItemForm({ onSubmit, editingItem, onCancel }) {
+async function compressImage(file) {
+  const options = {
+    maxSizeMB: 1,          // target max size
+    maxWidthOrHeight: 1200, // resize large images
+    useWebWorker: true
+  };
+
+  try {
+    const compressedFile = await imageCompression(file, options);
+    return compressedFile;
+  } catch (error) {
+    console.error('Compression error:', error);
+    return file; // fallback to original
+  }
+}
+
+export default function ItemForm({ onSubmit, editingItem, onCancel, isEditing }) {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [price, setPrice] = useState('');
@@ -10,12 +27,19 @@ export default function ItemForm({ onSubmit, editingItem, onCancel }) {
   const [showModal, setShowModal] = useState(false);
   const [modalMessage, setModalMessage] = useState('');
   const [loading, setLoading] = useState(false);
+  const fileInputRef = useRef(null);
+  const [previewUrl, setPreviewUrl] = useState(null);
 
   useEffect(() => {
     if (editingItem) {
       setTitle(editingItem.title || '');
       setDescription(editingItem.description || '');
       setPrice(editingItem.price || '');
+
+      // Only set preview if no new file is selected
+      if (!file) {
+        setPreviewUrl(editingItem.image_url || null);
+      }
     } else {
       resetForm();
     }
@@ -26,23 +50,53 @@ export default function ItemForm({ onSubmit, editingItem, onCancel }) {
     setDescription('');
     setPrice('');
     setFile(null);
+    setPreviewUrl(null);
+
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
   }
 
   async function handleSubmit() {
+    //  Require title
+    if (!title || title.trim() === '') {
+      setModalMessage('Title is required.');
+      setShowModal(true);
+      return;
+    }
+    //  Require description
+    if (!description || description.trim() === '') {
+      setModalMessage('Description is required.');
+      setShowModal(true);
+      return;
+    }
     //  Require price
-    if (!price || price.trim() === '') {
+    if (!price) {
       setModalMessage('Price is required.');
+      setShowModal(true);
+      return;
+    }
+    //  Require image
+    // Only require image when adding
+    if (!isEditing && !file) {
+      setModalMessage('Image is required.');
       setShowModal(true);
       return;
     }
 
     setLoading(true);
 
+    let processedFile = file;
+
+    if (file) {
+      processedFile = await compressImage(file);
+    }
+
     const result = await onSubmit({
       title,
       description,
       price,
-      file
+      file: processedFile
     });
 
     setLoading(false);
@@ -85,9 +139,27 @@ export default function ItemForm({ onSubmit, editingItem, onCancel }) {
           onChange={e => setPrice(e.target.value)}
         />
 
+        Image
+        {previewUrl && (
+          <img
+            src={previewUrl}
+            alt="Preview"
+            className="w-40 h-40 object-cover rounded border"
+          />
+        )}
         <input
           type="file"
-          onChange={e => setFile(e.target.files[0])}
+          ref={fileInputRef}
+          accept="image/*"
+          onChange={(e) => {
+            const selectedFile = e.target.files[0];
+            setFile(selectedFile);
+
+            if (selectedFile) {
+              const url = URL.createObjectURL(selectedFile);
+              setPreviewUrl(url);
+            }
+          }}
         />
 
         <div className="flex gap-2">
