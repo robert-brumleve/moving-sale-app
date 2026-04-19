@@ -28,7 +28,7 @@ export default function Home() {
     const { data } = await supabase
       .from('items')
       .select('*')
-      .order('created_at', { ascending: false });
+      .order('position', { ascending: true })
 
     setItems(data || []);
   }
