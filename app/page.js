@@ -77,13 +77,13 @@ export default function Home() {
                 </span>
               )}
             </div>
-            {item.status != 'sold' && (
-              <button
-                className="bg-blue-500 text-white px-2 py-1 rounded"
-                onClick={() => getMailtoLink(item)}
+            {item.status !== 'sold' && (
+              <a
+                href={getMailtoLink(item)}
+                className="bg-blue-500 text-white px-3 py-2 rounded hover:bg-blue-600 transition inline-block"
               >
                 Contact Seller
-              </button>
+              </a>
             )}
           </div>
         ))}
