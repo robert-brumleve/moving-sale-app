@@ -31,6 +31,17 @@ export default function Home() {
     setItems(data || []);
   }
 
+  const ADMIN_EMAIL = 'bob.brumleve@gmail.com';
+  function getMailtoLink(item) {
+    const subject = encodeURIComponent(`Interested in: ${item.title}`);
+    const body = encodeURIComponent(
+      `Hi,\n\nI'm interested in this item:\n\n${item.title}\n\nIs it still available?\n\nThanks`
+    );
+
+    return `mailto:${ADMIN_EMAIL}?subject=${subject}&body=${body}`;
+  }
+
+
   return (
     <div className="min-h-screen bg-gray-100 p-6 text-gray-600">
       <h1 className="text-3xl font-bold mb-6">Items for Sale</h1>
@@ -66,6 +77,14 @@ export default function Home() {
                 </span>
               )}
             </div>
+            {item.status != 'sold' && (
+              <button
+                className="bg-blue-500 text-white px-2 py-1 rounded"
+                onClick={() => getMailtoLink(item)}
+              >
+                Contact Seller
+              </button>
+            )}
           </div>
         ))}
         {selectedImage && (
