@@ -2,18 +2,24 @@
 
 import { useEffect, useState } from 'react';
 import { supabase } from '../lib/supabase';
-import { arrayMove } from '@dnd-kit/sortable';
+import { restrictToWindowEdges } from '@dnd-kit/modifiers';
 import {
   DndContext,
-  closestCenter
+  closestCenter,
+  useSensor,
+  useSensors,
+  PointerSensor,
+  TouchSensor,
+  DragOverlay
 } from '@dnd-kit/core';
 
 import {
   SortableContext,
-  rectSortingStrategy
+  rectSortingStrategy,
+  arrayMove,
+  useSortable
 } from '@dnd-kit/sortable';
 
-import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 
 function SortableItem({ item, onEdit, onDelete, onMarkSold, onMarkAvailable, setSelectedImage }) {
@@ -36,10 +42,10 @@ function SortableItem({ item, onEdit, onDelete, onMarkSold, onMarkAvailable, set
       ref={setNodeRef}
       style={style}
       className={`bg-white p-4 rounded-2xl shadow ${
-        isDragging ? 'opacity-50' : ''
+        isDragging ? 'opacity-50 scale-105' : ''
       }`}
     >
-      <div {...attributes} {...listeners} className="cursor-grab mb-2 text-gray-400">
+      <div {...attributes} {...listeners} className="cursor-grab mb-2 text-gray-400 touch-none">
         ☰ Drag
       </div>
 
@@ -78,6 +84,7 @@ function SortableItem({ item, onEdit, onDelete, onMarkSold, onMarkAvailable, set
 
 export default function ItemList({ items, setItems, onEdit, onDelete, onMarkSold, onMarkAvailable }) {
   const [selectedImage, setSelectedImage] = useState(null);
+  const [activeItem, setActiveItem] = useState(null);
 
   useEffect(() => {
     function handleKey(e) {
@@ -105,15 +112,40 @@ export default function ItemList({ items, setItems, onEdit, onDelete, onMarkSold
     );
   }
 
+    const sensors = useSensors(
+      useSensor(PointerSensor, {
+        activationConstraint: {
+          distance: 8, // drag only starts after moving 8px
+        },
+      }),
+      useSensor(TouchSensor, {
+        activationConstraint: {
+          delay: 200, // press-and-hold delay
+          tolerance: 5,
+        },
+      })
+    );
+
   return (
     <div>
       <h2 className="text-xl font-semibold mb-4">Items</h2>
 
-      <DndContext collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
-        <SortableContext
-          items={items.map(item => item.id)}
-          strategy={rectSortingStrategy} // ✅ grid-friendly
+        <DndContext
+          sensors={sensors}
+          collisionDetection={closestCenter}
+          onDragStart={({ active }) => {
+            const item = items.find(i => i.id === active.id);
+            setActiveItem(item);
+          }}
+          onDragEnd={(event) => {
+            handleDragEnd(event);
+            setActiveItem(null);
+          }}
         >
+          <SortableContext
+          items={items.map(item => item.id)}
+          strategy={rectSortingStrategy}
+          >
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
             {items.map(item => (
               <SortableItem
@@ -128,6 +160,13 @@ export default function ItemList({ items, setItems, onEdit, onDelete, onMarkSold
             ))}
           </div>
         </SortableContext>
+        <DragOverlay>
+          {activeItem ? (
+            <div className="bg-white p-4 rounded-2xl shadow-lg w-60">
+              <p className="font-bold">{activeItem.title}</p>
+            </div>
+          ) : null}
+        </DragOverlay>
       </DndContext>
 
       {/* Lightbox OUTSIDE map */}
