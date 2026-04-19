@@ -62,8 +62,11 @@ export default function Home() {
       >
         Email: lbrumleve@sbcglobal.net
       </a>
+      <h1 className="text-3xl font-bold mb-6">Payment Methods</h1>
+      <p className="text-black-600 text-lg mb-2">Cash</p>
+      <p className="text-black-600 text-lg mb-2">PayPal</p>
+      <p className="text-black-600 text-lg mb-2">Zelle</p>
       <h1 className="text-3xl font-bold mb-6">Items for Sale</h1>
-
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
         {items.map(item => (
           <div
@@ -100,7 +103,7 @@ export default function Home() {
                 href={getMailtoLink(item)}
                 className="bg-blue-500 text-white px-3 py-2 rounded hover:bg-blue-600 transition inline-block"
               >
-                Contact Seller
+                Email Re: {item.title}
               </a>
             )}
           </div>
