@@ -31,11 +31,14 @@ export default function Home() {
     setItems(data || []);
   }
 
+  const ADMIN_PHONE = '816-809-5832'
   const ADMIN_EMAIL = 'bob.brumleve@gmail.com';
+  const callAdmin = `tel:${ADMIN_PHONE}`;
+  const emailAdmin = `mailto:${ADMIN_EMAIL}`;
   function getMailtoLink(item) {
     const subject = encodeURIComponent(`Interested in: ${item.title}`);
     const body = encodeURIComponent(
-      `Hi,\n\nI'm interested in this item:\n\n${item.title}\n\nIs it still available?\n\nThanks`
+      `Hello,\n\nI'm interested in this item:\n\n${item.title}\n\nIs it still available?\n\nThank you`
     );
 
     return `mailto:${ADMIN_EMAIL}?subject=${subject}&body=${body}`;
@@ -44,6 +47,21 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-gray-100 p-6 text-gray-600">
+      <h1 className="text-3xl font-bold mb-6" style={{ textAlign: "center" }}>LJB Moving Sale</h1>
+      <h1 className="text-3xl font-bold mb-6">Contact</h1>
+      <h2 className="text-xl font-semibold">Lawrence Brumleve</h2>
+      <a
+        href={callAdmin}
+        className="inline-block mt-2 bg-green-500 text-white text-center px-4 py-2 rounded hover:bg-green-600"
+      >
+        Call: 816-809-5832
+      </a><p></p>
+      <a
+        href={emailAdmin}
+        className="inline-block mt-2 bg-green-500 text-white text-center px-4 py-2 rounded hover:bg-green-600"
+      >
+        Email: lbrumleve@sbcglobal.net
+      </a>
       <h1 className="text-3xl font-bold mb-6">Items for Sale</h1>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
