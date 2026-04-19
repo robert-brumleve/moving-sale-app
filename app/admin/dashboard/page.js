@@ -30,7 +30,7 @@ export default function Dashboard() {
     const { data, error } = await supabase
       .from('items')
       .select('*')
-      .order('created_at', { ascending: false });
+      .order('position', { ascending: true })
 
     if (!error) setItems(data);
   }
@@ -206,6 +206,7 @@ export default function Dashboard() {
 
       <ItemList
         items={items}
+        setItems={setItems}
         onEdit={(item) => {
           setEditingItem(item);
           setShowEditModal(true);
