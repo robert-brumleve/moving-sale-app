@@ -32,7 +32,7 @@ export default function Home() {
   }
 
   const ADMIN_PHONE = '816-809-5832'
-  const ADMIN_EMAIL = 'bob.brumleve@gmail.com';
+  const ADMIN_EMAIL = 'lbrumleve@sbcglobal.net';
   const callAdmin = `tel:${ADMIN_PHONE}`;
   const emailAdmin = `mailto:${ADMIN_EMAIL}`;
   function getMailtoLink(item) {
